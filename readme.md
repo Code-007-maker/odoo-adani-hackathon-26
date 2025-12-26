@@ -1,8 +1,5 @@
 # Odoo x Adani University Hackathon 2026
 
-conflict!!
-
-
 ## Team Details
 - Team Name: Xcalibur
 - Team Leader: Arbaj Khan
