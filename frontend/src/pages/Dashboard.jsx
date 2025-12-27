@@ -349,7 +349,7 @@ const navigate = useNavigate();
                 <span className="text-white font-medium text-sm">View All Requests</span>
                 <ArrowRight className="w-4 h-4 text-purple-300 group-hover:translate-x-1 transition-transform" />
               </button>
-              <button className="w-full p-4 rounded-xl bg-gradient-to-r from-blue-500/20 to-cyan-500/20 border border-blue-400/30 hover:border-blue-400/50 transition-all duration-200 flex items-center justify-between group">
+              <button className="w-full p-4 rounded-xl bg-gradient-to-r from-blue-500/20 to-cyan-500/20 border border-blue-400/30 hover:border-blue-400/50 transition-all duration-200 flex items-center justify-between group" onClick={() => navigate("/calendar")}>
                 <span className="text-white font-medium text-sm">Maintenance Calendar</span>
                 <ArrowRight className="w-4 h-4 text-blue-300 group-hover:translate-x-1 transition-transform" />
               </button>
