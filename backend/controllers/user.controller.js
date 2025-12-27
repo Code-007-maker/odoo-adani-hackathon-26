@@ -88,7 +88,20 @@ const loginUser = asyncHandler(async(req,res) => {
         secure:true,
     }
 
-    return res.status(200).cookie("RefreshToken",refreshToken,options).cookie("AccessToken",accessToken,options).json(new ApiResponse(200,{user:loggedInUser,refreshToken,accessToken},""))
+return res
+  .status(200)
+  .cookie("accessToken", accessToken, {
+    httpOnly: true,
+    secure: false,        // localhost
+    sameSite: "lax"
+  })
+  .cookie("refreshToken", refreshToken, {
+    httpOnly: true,
+    secure: false,
+    sameSite: "lax"
+  })
+  .json(new ApiResponse(200, { user: loggedInUser }, "Login successful"));
+
 })
 
 const logoutUser = asyncHandler(async (req,res) => {

@@ -11,28 +11,26 @@ export const verifyJWT = asyncHandler(async (req,res,next)=>{
     // update the user by deleting refresh token
 
 try {
-    const token = req.cookies?.accessToken || req.cookies?.AccessToken;
-    console.log("Token from cookie:", token);
+    const token = req.cookies?.accessToken;
 
-    if (!token) {
-        console.log(1);
-        throw new ApiError(401, "Unauthorized Request");
-    }
+if (!token) {
+  throw new ApiError(401, "Access token missing");
+}
 
-    console.log("Verifying token...");
-    const decodedToken = /* no await needed here*/ jwt.verify(token, process.env.ACCESS_TOKEN_SECRET); 
-    console.log("Decoded token:", decodedToken);
+const decodedToken = jwt.verify(
+  token,
+  process.env.ACCESS_TOKEN_SECRET
+);
 
-    console.log("Fetching user...");
-    const user = await User.findById(decodedToken._id);
-    console.log("User found:", user);
+const user = await User.findById(decodedToken._id);
 
-    if (!user) {
-        console.log(2);
-        throw new ApiError(401, "Invalid Access Token");
-    }
+if (!user) {
+  throw new ApiError(401, "Invalid Access Token");
+}
 
-    req.user = user;
+req.user = user;
+next();
+
 } catch (error) {
     console.log("JWT verification error:", error.name, error.message);
     console.log(req.cookies);

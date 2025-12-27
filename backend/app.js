@@ -2,6 +2,9 @@ import express, { urlencoded } from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 const app = express();
+import maintenanceRoutes from "./routes/maintenance.route.js";
+
+app.use("/api/maintenance", maintenanceRoutes);
 
 app.use(cookieParser());
 app.use(cors(
