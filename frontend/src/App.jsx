@@ -10,12 +10,15 @@ import { UserProvider } from "./context/UserContext";
 import Home from './pages/Home'
 
 
+import Login from './pages/Login.jsx'
+
 function App() {
   return (
     <UserProvider>
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home/>} />
+        <Route path="/login" element={<Login/>} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/kanban" element={<KanbanBoard />} />
         <Route path="/calendar" element={<MaintenanceCalendar />} />
