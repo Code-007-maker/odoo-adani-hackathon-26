@@ -14,6 +14,9 @@ app.use(express.json());
 app.use(urlencoded({ extended: true }));
 
 import userRouter from './routes/user.route.js';
+import equipmentRoutes from './routes/equipmentRoutes.js'
 
 app.use('/users', userRouter);
+app.use('/equipments', equipmentRoutes);
+
 export default app;
