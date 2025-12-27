@@ -5,13 +5,14 @@ import MaintenanceCalendar from "./pages/Calendar";
 import Teams from './pages/Teams'
 import Equipment from './pages/Equipment'
 import EquipmentCategories from './pages/EquipmentCategories'
+import Home from './pages/Home'
 
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<div>Home</div>} />
+        <Route path="/" element={<Home/>} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/kanban" element={<KanbanBoard />} />
         <Route path="/calendar" element={<MaintenanceCalendar />} />
