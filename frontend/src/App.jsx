@@ -7,6 +7,8 @@ import Equipment from './pages/Equipment'
 import EquipmentCategories from './pages/EquipmentCategories'
 import MaintenanceRequest from "./pages/MaintenanceRequest";
 import { UserProvider } from "./context/UserContext";
+import Home from './pages/Home'
+
 
 import Login from './pages/Login.jsx'
 
@@ -15,7 +17,7 @@ function App() {
     <UserProvider>
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<div>Home</div>} />
+        <Route path="/" element={<Home/>} />
         <Route path="/login" element={<Login/>} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/kanban" element={<KanbanBoard />} />
