@@ -7,13 +7,15 @@ import Equipment from './pages/Equipment'
 import EquipmentCategories from './pages/EquipmentCategories'
 import MaintenanceRequest from "./pages/MaintenanceRequest";
 import { UserProvider } from "./context/UserContext";
+import Home from './pages/Home'
+
 
 function App() {
   return (
     <UserProvider>
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<div>Home</div>} />
+        <Route path="/" element={<Home/>} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/kanban" element={<KanbanBoard />} />
         <Route path="/calendar" element={<MaintenanceCalendar />} />
