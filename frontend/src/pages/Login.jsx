@@ -63,7 +63,7 @@ const handleLogin = async function(){
     setemaillog('');
     setloader(false);
     // toast(res.data.message,{className:"font-bold text-lg"});
-    navigate('/',{replace:true})
+    navigate('/dashboard',{replace:true})
     // console.log(res.data);
   }catch(error){
     setloader(false);
