@@ -1,7 +1,8 @@
-import { useState } from 'react'
-// import reactLogo from './assets/react.svg'
-// import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Dashboard from "./pages/dashboard";
+import KanbanBoard from "./pages/Kanban";
+import MaintenanceCalendar from "./pages/Calendar";
+
 
 import Login from './pages/Login.jsx'
 // import Navbar from './components/Navbar'
@@ -19,15 +20,15 @@ import { Routes,Route } from 'react-router-dom'
 // import ProtectedRoute from './components/ProtectedRoute'
 function App() {
   return (
-    <>
-    <Routes>
-      <Route path='/' element={<Login/>}/>
-      {/* <Route path='/' element={<ProtectedRoute>
-        <Home/>
-      </ProtectedRoute>}/> */}
-    </Routes>
-    </>
-  )
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<div>Home</div>} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/kanban" element={<KanbanBoard />} />
+        <Route path="/calendar" element={<MaintenanceCalendar />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
