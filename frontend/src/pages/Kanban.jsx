@@ -11,7 +11,7 @@ import {
   MoreVertical
 } from "lucide-react";
 import { useState } from "react";
-
+import { useUser } from "../context/UserContext";
 const initialRequests = [
   {
     id: 1,
@@ -132,7 +132,17 @@ const columns = [
   { id: "Scrap", title: "Scrap", color: "gray" }
 ];
 
+import { useNavigate } from "react-router-dom";
+import { AssignDialog } from "../components/AssignDialog";
 export default function KanbanBoard() {
+    const navigate = useNavigate();
+    const [assignOpen, setAssignOpen] = useState(false)
+const [selectedRequest, setSelectedRequest] = useState(null)
+
+  const { user } = useUser();
+const isManager = user.role === "Manager";
+
+
   const [requests, setRequests] = useState(initialRequests);
   const [filterType, setFilterType] = useState("All");
   const [draggedCard, setDraggedCard] = useState(null);
@@ -151,6 +161,31 @@ export default function KanbanBoard() {
     e.dataTransfer.effectAllowed = "move";
     e.dataTransfer.setData("text/html", e.target);
   };
+
+const handleAssignOpen = (request) => {
+  setSelectedRequest(request)
+  setAssignOpen(true)
+}
+
+const handleAssignSave = (data) => {
+  setRequests(prev =>
+    prev.map(req =>
+      req.id === selectedRequest.id
+        ? {
+            ...req,
+            assignee: data.technician,
+            date: data.date,
+            status: "In Progress"
+          }
+        : req
+    )
+  )
+
+  setAssignOpen(false)
+  setSelectedRequest(null)
+}
+
+
 
   const handleDragEnd = () => {
     setDraggedCard(null);
@@ -224,14 +259,14 @@ export default function KanbanBoard() {
                   onChange={(e) => setFilterType(e.target.value)}
                   className="px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-white text-sm backdrop-blur-xl hover:bg-white/15 transition-all cursor-pointer"
                 >
-                  <option value="All">All Types</option>
-                  <option value="Corrective">Corrective</option>
-                  <option value="Preventive">Preventive</option>
+                  <option value="All" className="bg-slate-800 text-white">All Types</option>
+                  <option value="Corrective" className="bg-slate-800 text-white">Corrective</option>
+                  <option value="Preventive" className="bg-slate-800 text-white">Preventive</option>
                 </select>
               </div>
               
               {/* Create Button */}
-              <button className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 rounded-lg text-white font-medium shadow-lg hover:shadow-xl transition-all duration-200 border border-blue-400/30">
+              <button className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 rounded-lg text-white font-medium shadow-lg hover:shadow-xl transition-all duration-200 border border-blue-400/30" onClick={() => navigate("/main-req")} >
                 <Plus className="w-4 h-4" />
                 Create Request
               </button>
@@ -245,23 +280,30 @@ export default function KanbanBoard() {
             const columnRequests = getRequestsByStatus(column.id);
             return (
               <KanbanColumn 
-                key={column.id}
-                column={column}
-                requests={columnRequests}
-                draggedCard={draggedCard}
-                dragOverColumn={dragOverColumn}
-                onDragStart={handleDragStart}
-                onDragEnd={handleDragEnd}
-                onDragOver={handleDragOver}
-                onDragEnter={handleDragEnter}
-                onDragLeave={handleDragLeave}
-                onDrop={handleDrop}
+                  key={column.id}
+  column={column}
+  requests={columnRequests}
+  draggedCard={draggedCard}
+  dragOverColumn={dragOverColumn}
+  onDragStart={handleDragStart}
+  onDragEnd={handleDragEnd}
+  onDragOver={handleDragOver}
+  onDragEnter={handleDragEnter}
+  onDragLeave={handleDragLeave}
+  onDrop={handleDrop}
+  onAssign={handleAssignOpen}  
+  isManager={isManager}         
+
               />
             );
           })}
         </div>
       </div>
-
+     <AssignDialog
+  open={assignOpen}
+  onClose={() => setAssignOpen(false)}
+  onSave={handleAssignSave}
+/>
       <style jsx>{`
         @keyframes blob {
           0% { transform: translate(0px, 0px) scale(1); }
@@ -279,6 +321,9 @@ export default function KanbanBoard() {
           animation-delay: 4s;
         }
       `}</style>
+
+  
+
     </div>
   );
 }
@@ -293,7 +338,9 @@ function KanbanColumn({
   onDragOver, 
   onDragEnter,
   onDragLeave,
-  onDrop 
+  onDrop,
+  onAssign,
+  isManager 
 }) {
   const colorStyles = {
     purple: "from-purple-500/20 to-purple-600/20 border-purple-400/30",
@@ -336,13 +383,17 @@ function KanbanColumn({
         isDropZone ? 'bg-white/5 border-2 border-dashed border-white/30' : ''
       }`}>
         {requests.map(request => (
-          <RequestCard 
-            key={request.id} 
-            request={request}
-            isDragging={draggedCard === request.id}
-            onDragStart={onDragStart}
-            onDragEnd={onDragEnd}
-          />
+<RequestCard
+  key={request.id}
+  request={request}
+  isDragging={draggedCard === request.id}
+  onDragStart={onDragStart}
+  onDragEnd={onDragEnd}
+  onAssign={onAssign}      
+  isManager={isManager}    
+/>
+
+
         ))}
         {requests.length === 0 && (
           <div className="backdrop-blur-xl bg-white/5 rounded-2xl p-6 border border-white/10 border-dashed">
@@ -352,11 +403,15 @@ function KanbanColumn({
           </div>
         )}
       </div>
+  
     </div>
+
+ 
   );
+  
 }
 
-function RequestCard({ request, isDragging, onDragStart, onDragEnd }) {
+function RequestCard({ request, isDragging, onDragStart, onDragEnd,onAssign , isManager }) {
   const isScrap = request.status === "Scrap";
   
   return (
@@ -448,12 +503,20 @@ function RequestCard({ request, isDragging, onDragStart, onDragEnd }) {
         </div>
 
         {/* Action Menu */}
-        <button 
-          onClick={(e) => e.stopPropagation()}
-          className="p-1 hover:bg-white/10 rounded-lg transition-colors opacity-0 group-hover:opacity-100"
-        >
-          <MoreVertical className="w-4 h-4 text-gray-400" />
-        </button>
+        {isManager && (
+  <button
+  onMouseDown={(e) => e.stopPropagation()}   // 🔴 MUST
+  onClick={(e) => {
+    e.stopPropagation()
+    onAssign(request)
+  }}
+  className="p-1 hover:bg-white/10 rounded-lg transition-colors opacity-0 group-hover:opacity-100"
+>
+  <MoreVertical className="w-4 h-4 text-gray-400" />
+</button>
+
+)}
+
       </div>
     </div>
   );
